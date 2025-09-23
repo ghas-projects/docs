@@ -17,7 +17,13 @@ By conducting a quality assessment, we can detect these potential gaps in covera
 
 ### 2. Security Research 
 
-MRVA also supports security-focused use cases. It enables running custom queries, such as detecting leaked secrets in Actions workflows. Performing these checks directly within developer workflows (on every push or pull request) is resource-intensive and slows rollout, as it requires switching to advanced workflows. MRVA avoids this by running outside the developer workflow, allowing security research to be conducted at scale without impacting developer velocity.
+The main use case for MRVA is to enable security research at scale. It achieves this by running a set of custom queries (detecting leaked secrets in Actions workflow) against a list of CodeQL databases. 
+
+**Why not just run this as a part of the workflow?**
+Performing these checks directly within developer workflows (on every push or pull request) can be resource-intensive and slows rollout, as it requires switching to advanced workflows. MRVA avoids this by running outside the developer workflow, allowing security research to be conducted at scale without impacting developer velocity. Also depending on the query (the FP rate) may be higher than what we want to put in front of developers? This is often the case when doing exploratory queries. 
+
+
+
 
 
 ## MRVA Example 
