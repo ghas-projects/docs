@@ -1,4 +1,26 @@
-# MRVA Example 
+# Multi-Repository Variant Analysis (MRVA)
+
+Multi-Repository Variant Analysis (MRVA) enables scalable CodeQL querying across up to 1,000 repositories per execution.
+
+A CodeQL database is required for MRVA to be feasible, and large-scale adoption is only possible once CodeQL has been fully rolled out across the Enterprise for the target language being analyzed. After rollout, each workflow run generates a fresh CodeQL database snapshot for every language analyzed within a repository, with the most recent version automatically persisted in GitHub’s database service. Repositories cannot participate in MRVA until a valid CodeQL database is available.
+
+## Use Cases 
+
+### 1. Quality Assessment Reports
+
+Currently, scan quality is determined at the repository level, with each team responsible for raising issues with their own analyses. This decentralized model creates scalability challenges, introduces inconsistencies, and makes it difficult to enforce standardization across the enterprise.Our product team is aware of these limitations and will be  working on a long-term solution. In the interim, MRVA addresses this gap by surfacing scan quality in aggregate, enabling enterprise-wide visibility and identifying repositories that are candidates to switch to advanced workflows.
+
+**Why conduct quality assessments?** 
+Enterprises sometimes operate with more than one registry for each ecosystem. When relying on default scanning, however, only a single registry can be used. This limitation means that some analyses may be incomplete or inaccurate, as they fail to account for dependencies or codebases tied to other registries.
+
+By conducting a quality assessment, we can detect these potential gaps in coverage, highlight analyses that may be incomplete due to registry limitations, and flag them as candidates for migration to advanced workflows. This ensures that critical issues are not overlooked and that the enterprise maintains comprehensive visibility across all registries in use.
+
+### 2. Security Research 
+
+MRVA also supports security-focused use cases. It enables running custom queries, such as detecting leaked secrets in Actions workflows. Performing these checks directly within developer workflows (on every push or pull request) is resource-intensive and slows rollout, as it requires switching to advanced workflows. MRVA avoids this by running outside the developer workflow, allowing security research to be conducted at scale without impacting developer velocity.
+
+
+## MRVA Example 
 
 ## Create Variant Analysis API
 
