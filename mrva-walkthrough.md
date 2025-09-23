@@ -23,15 +23,15 @@ The main use case for MRVA is to enable security research at scale. It achieves 
 Performing these checks directly within developer workflows (on every push or pull request) can be resource-intensive and slows rollout, as it requires switching to advanced workflows. MRVA avoids this by running outside the developer workflow, allowing security research to be conducted at scale without impacting developer velocity. Also depending on the query (the FP rate) may be higher than what we want to put in front of developers? This is often the case when doing exploratory queries. 
 
 
-### Architecture Diagram 
+## Architecture Diagram 
 
-#### 1. Create MRVA Analysis
+### 1. Create MRVA Analysis
 <img width="5284" height="1724" alt="image" src="https://github.com/user-attachments/assets/b077af25-427d-49b5-aaec-6d96fdd5e9e1" />
 
 
 
 
-#### 2. Get MRVA Results
+### 2. Get MRVA Results
 <img width="2648" height="2024" alt="image" src="https://github.com/user-attachments/assets/169614e7-471b-4261-a906-e68ad915dd85" />
 
 
@@ -39,7 +39,53 @@ Performing these checks directly within developer workflows (on every push or pu
 
 
 
-## MRVA Example 
+## Pre-requisites
+
+### CodeQL Rollout 
+
+Completing the CodeQL rollout is a foundational requirement, as MRVA depends on these databases to perform variant analysis effectively.
+
+###  GitHub Actions and Controller Repository
+
+#### Execution Environment  
+MRVA leverages GitHub Actions to run queries against CodeQL databases stored on GitHub. While it does not require creating a dedicated workflow file, it does require a controller repository to orchestrate the variant analysis workflow.  
+
+#### Controller Repository Setup  
+- The controller repository must contain at least one commit to function properly.  
+- This repository acts as the central trigger point for initiating variant analysis runs.  
+
+### Runner Configuration  
+MRVA supports self-hosted GitHub Actions runners through the configuration of the `MRVA_RUNNER_OS` action variable.  
+- This variable is set on the controller repository as an action variable (not as a secret).  
+- It accepts a JSON array mapping to the `runs-on` field in GitHub Actions. For Example:  
+
+```json
+["self-hosted", "some-label", "another-label"]
+
+## APIs
+
+### Create a CodeQL Variant Analysis
+
+---
+
+## Request Body (JSON)
+
+| Field                | Type            | Required | Description |
+|---------------------|-----------------|----------|-------------|
+| `language`          | `string`        | ✅       | Target language to analyze (e.g., `"javascript"`, `"typescript"`, `"python"`, `"java"`, `"cpp"`, `"csharp"`, `"go"`, `"ruby"`). CodeQL creates one database per language per repository; if a repo has 5 languages, it can have 5 distinct CodeQL databases. |
+| `query_pack`        | `string` (Base64) | ✅     | A CodeQL query pack (`.tgz`) encoded in Base64. The pack contains the query (or queries) and optional libraries/dependencies. |
+| `repository_owners` | `string[]`      | ⚠️ Either this or `repositories` | Organization/owner handles (e.g., `["my-org"]`). The analysis will target repositories owned by these organizations (subject to whatever selection rules your MRVA service applies). |
+| `repositories`      | `string[]`      | ⚠️ Either this or `repository_owners` | Explicit list of repositories in `"owner/name"` form (e.g., `["my-org/service-a", "my-org/service-b"]`). Use this to pin an exact set of repos. |
+
+### Notes
+- Choose one: Provide either `repository_owners` or `repositories`. Supplying both should be rejected or one should be ignored (depending on your service’s rules).
+- `query_pack` must be the Base64 of the tarball (`.tgz`) of a CodeQL pack (see below).
+- The `language` must match the CodeQL database language you intend to analyze.
+
+---
+
+
+
 
 ## Create Variant Analysis API
 
