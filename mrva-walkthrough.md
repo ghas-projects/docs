@@ -26,7 +26,8 @@ Performing these checks directly within developer workflows (on every push or pu
 ### Architecture Diagram 
 
 
-<img width="724" height="364" alt="image" src="https://github.com/user-attachments/assets/c2a70325-6458-45d5-a2f8-846d7da9828f" />
+<img width="4844" height="1724" alt="image" src="https://github.com/user-attachments/assets/f794cf85-20a7-4885-80c9-0a4f9f682d99" />
+
 
 
 
