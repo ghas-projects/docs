@@ -36,9 +36,6 @@ Performing these checks directly within developer workflows (on every push or pu
 
 
 
-
-
-
 ## Pre-requisites
 
 ### CodeQL Rollout 
@@ -66,8 +63,9 @@ MRVA supports self-hosted GitHub Actions runners through the configuration of th
 ## APIs
 
 ### Create a CodeQL Variant Analysis
-
 ---
+
+[Documentation Link](https://docs.github.com/en/enterprise-cloud@latest/rest/code-scanning/code-scanning?apiVersion=2022-11-28#create-a-codeql-variant-analysis)
 
 #### Request Body (JSON)
 
@@ -85,8 +83,37 @@ MRVA supports self-hosted GitHub Actions runners through the configuration of th
 
 ---
 
+### Get the analysis status of a repository in a CodeQL variant analysis
+
+[Documentation Link](https://docs.github.com/en/enterprise-cloud@latest/rest/code-scanning/code-scanning?apiVersion=2022-11-28#get-the-analysis-status-of-a-repository-in-a-codeql-variant-analysis)
+
+- `{owner}` / `{repo}`: the controller repository that orchestrates the MRVA. :contentReference[oaicite:0]{index=0}  
+- `{codeql_variant_analysis_id}`: the MRVA job ID. :contentReference[oaicite:1]{index=1}  
+- `{repo_owner}` / `{repo_name}`: the target repository whose status you want. :contentReference[oaicite:2]{index=2}
+
+---
+
+#### Path Parameters
+
+| Name                         | Type     | Required | Description |
+|-----------------------------|----------|----------|-------------|
+| `owner`                     | string   | ✅       | Account owner of the controller repo. :contentReference[oaicite:6]{index=6} |
+| `repo`                      | string   | ✅       | Name of the controller repo. :contentReference[oaicite:7]{index=7} |
+| `codeql_variant_analysis_id`| integer  | ✅       | ID of the MRVA run. :contentReference[oaicite:8]{index=8} |
+| `repo_owner`                | string   | ✅       | Owner of the target repo in the MRVA. :contentReference[oaicite:9]{index=9} |
+| `repo_name`                 | string   | ✅       | Name of the target repo in the MRVA. :contentReference[oaicite:10]{index=10} |
+
+> No query/body parameters are supported; this is a read-only GET endpoint.
+
+---
+
+### Get the summary of a CodeQL variant analysis
+
+[Documentation Link
+](https://docs.github.com/en/enterprise-cloud@latest/rest/code-scanning/code-scanning?apiVersion=2022-11-28#get-the-summary-of-a-codeql-variant-analysis)
 
 
+## Demo 
 
 ## Create Variant Analysis API
 
