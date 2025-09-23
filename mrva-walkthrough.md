@@ -23,6 +23,15 @@ The main use case for MRVA is to enable security research at scale. It achieves 
 Performing these checks directly within developer workflows (on every push or pull request) can be resource-intensive and slows rollout, as it requires switching to advanced workflows. MRVA avoids this by running outside the developer workflow, allowing security research to be conducted at scale without impacting developer velocity. Also depending on the query (the FP rate) may be higher than what we want to put in front of developers? This is often the case when doing exploratory queries. 
 
 
+### Architecture Diagram 
+
+
+<img width="724" height="364" alt="image" src="https://github.com/user-attachments/assets/c2a70325-6458-45d5-a2f8-846d7da9828f" />
+
+
+
+
+
 
 
 
