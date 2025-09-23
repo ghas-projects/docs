@@ -61,6 +61,7 @@ MRVA supports self-hosted GitHub Actions runners through the configuration of th
 
 ```json
 ["self-hosted", "some-label", "another-label"]
+```
 
 ## APIs
 
@@ -68,7 +69,7 @@ MRVA supports self-hosted GitHub Actions runners through the configuration of th
 
 ---
 
-## Request Body (JSON)
+#### Request Body (JSON)
 
 | Field                | Type            | Required | Description |
 |---------------------|-----------------|----------|-------------|
@@ -77,7 +78,7 @@ MRVA supports self-hosted GitHub Actions runners through the configuration of th
 | `repository_owners` | `string[]`      | ⚠️ Either this or `repositories` | Organization/owner handles (e.g., `["my-org"]`). The analysis will target repositories owned by these organizations (subject to whatever selection rules your MRVA service applies). |
 | `repositories`      | `string[]`      | ⚠️ Either this or `repository_owners` | Explicit list of repositories in `"owner/name"` form (e.g., `["my-org/service-a", "my-org/service-b"]`). Use this to pin an exact set of repos. |
 
-### Notes
+##### Notes
 - Choose one: Provide either `repository_owners` or `repositories`. Supplying both should be rejected or one should be ignored (depending on your service’s rules).
 - `query_pack` must be the Base64 of the tarball (`.tgz`) of a CodeQL pack (see below).
 - The `language` must match the CodeQL database language you intend to analyze.
