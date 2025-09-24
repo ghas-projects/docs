@@ -59,6 +59,17 @@ MRVA supports self-hosted GitHub Actions runners through the configuration of th
 ```json
 ["self-hosted", "some-label", "another-label"]
 ```
+## Query Packs 
+
+A CodeQL Query Pack is a distributable, reusable unit that bundles queries, query suites, and optionally libraries, along with a manifest file (`codeql-pack.yml`). Query packs are used to create, share, version, and run CodeQL queries consistently across repositories and projects.This is the mechanism we use to tell MRVA what queries to run. 
+
+### Purpose of Query Packs
+
+- Package and share: Bundle one or more queries (and their dependencies) into a portable unit  
+- Reuse: Define dependencies on other packs and use them across projects  
+- Version control: Publish and consume specific versions for reproducibility  
+- Execution: Run them in CodeQL CLI or in GitHub Advanced Security’s MRVA workflows
+
 
 ## APIs
 
