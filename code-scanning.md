@@ -30,7 +30,7 @@ There are three primary ways to run CodeQL:
 3. **CodeQL CLI in an external CI/CD pipeline**  
    Runs CodeQL outside of GitHub Actions, with results uploaded back to GitHub for code scanning.
 
-
+---
 ## Step 1: Creating a Database 
 
 The first step in any CodeQL analysis is creating a **CodeQL database**.  
@@ -72,15 +72,18 @@ codeql database init \
   --codescanning-config=/home/runner/work/_temp/user-config.yaml \
   --build-mode=none
 ```
-## Build Modes for Compiled Languages
+---
+## Step 2: Tracing the Build 
 
-### `none`
+### Build Modes
+
+#### `none`
 
 - No build is performed
 - Supported for all interpreted languages
 - Also supported for **C/C++**, **C#**, **Java**, and **Rust**
 
-### `autobuild`
+#### `autobuild`
 
 - CodeQL automatically detects and executes the build
 - Supported for:
@@ -91,7 +94,7 @@ codeql database init \
   - **Kotlin**
   - **Swift**
 
-### `manual`
+#### `manual`
 
 - Build steps are explicitly defined in the workflow
 - Recommended for complex or non-standard builds
@@ -103,5 +106,110 @@ codeql database init \
   - **Kotlin**
   - **Swift**
 
+---
 
-Query suites: code scanning (default), security-extended, and security-and-quality
+### Autobuild in GitHub Actions
+
+In GitHub Actions, autobuild is triggered using:
+
+```yaml
+github/codeql-action/autobuild@v4
+```
+
+This invokes `codeql database trace-command`, which runs build commands under a tracer and seeds the database with extracted data.Note - it does not finalize the database.
+
+```bash
+codeql database trace-command \
+  --use-build-mode \
+  --working-dir {DIR} \
+  {DATABASE}
+```
+
+---
+
+## Step 3: Performing CodeQL Analysis
+
+In GitHub Actions, analysis and database finalization are performed using:
+
+```yaml
+github/codeql-action/analyze@v4
+```
+
+### Database Finalization
+
+Finalize a database that was created with `codeql database init` and subsequently seeded with analysis data using `codeql database trace` command. This needs to happen before the new database can be queried.
+
+```bash
+codeql database finalize \
+  --finalize-dataset \
+  --threads=2 \
+  --ram=6915 \
+  {DATABASE}
+```
+
+Finalization is required before queries can be executed.
+
+### Running Queries
+
+Run one or more queries against a CodeQL database, saving the results to the results subdirectory of the database directory.
+
+```bash
+codeql database run-queries \
+  --ram=6915 \
+  --threads=2 \
+  --expect-discarded-cache \
+  --min-disk-free=1024 \
+  -v \
+  {DATABASE}
+```
+
+Built-in query suites include:
+
+- **code-scanning** (default)
+- **security-extended**
+- **security-and-quality**
+
+---
+
+## Step 4: Clean up and Bundling
+
+Compact a CodeQL database on disk.
+
+Delete temporary data, and generally make a database as small as possible on disk without degrading its future usefulness
+
+### Cleanup
+
+```bash
+codeql database cleanup {DATABASE} --cache-cleanup=clear
+```
+
+### Bundle Database
+
+Create a relocatable archive of a CodeQL database.
+
+A command that zips up the useful parts of the database. This will only include the mandatory components, unless the user specifically requests that results, logs, TRAP, or similar should be included.
+
+
+```bash
+codeql database bundle {DATABASE} --output={DATABASE}.zip --name={NAME}
+```
+
+---
+
+## The Common Case: Minimal CodeQL Commands
+
+When running CodeQL locally or configuring a custom CI/CD workflow, you typically do **not** need to use the low-level “plumbing” commands directly.
+
+GitHub Actions exposes these lower-level commands to support the wide variety of repository structures and build systems that exist in the ecosystem. However, for most standard workflows, CodeQL provides higher-level commands that encapsulate this complexity.
+
+In the majority of cases, only two commands are required:
+
+- `codeql database create`
+- `codeql database analyze`
+
+These commands handle database initialization, build tracing, extraction, finalization, and query execution under the hood.
+
+The analysis step produces a SARIF file, which can then be uploaded to GitHub using the following action:
+
+```yaml
+github/codeql-action/upload-sarif@vX
