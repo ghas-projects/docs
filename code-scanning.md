@@ -40,6 +40,8 @@ Downloading the CodeQL CLI and query packs separately is **not recommended**, as
 The source code for the CodeQL GitHub Action itself is available here:  
 https://github.com/github/codeql-action/
 
+You can view the CodeQL queries here:
+https://github.com/github/codeql
 
 ---
 ## Step 1: Creating a Database 
