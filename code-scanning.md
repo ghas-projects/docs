@@ -49,7 +49,7 @@ The database initialization step is performed by the following GitHub Action:
 github/codeql-action/init@vX
 ```
 
-This action invokes the equivalent of the `codeql database init` CLI command.
+This action invokes the equivalent of the [`codeql database init`](https://docs.github.com/en/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-init) CLI command.
 
 **Purpose of this step:**
 
@@ -116,7 +116,7 @@ In GitHub Actions, autobuild is triggered using:
 github/codeql-action/autobuild@v4
 ```
 
-This invokes `codeql database trace-command`, which runs build commands under a tracer and seeds the database with extracted data.Note - it does not finalize the database.
+This invokes [`codeql database trace-command`](https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-trace-command), which runs build commands under a tracer and seeds the database with extracted data.Note - it does not finalize the database.
 
 ```bash
 codeql database trace-command \
@@ -137,7 +137,7 @@ github/codeql-action/analyze@v4
 
 ### Database Finalization
 
-Finalize a database that was created with `codeql database init` and subsequently seeded with analysis data using `codeql database trace` command. This needs to happen before the new database can be queried.
+This invokes the [`codeql database finalize`](https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-finalize) command. This finalizes a database that was created with `codeql database init` and subsequently seeded with analysis data using `codeql database trace` command. This needs to happen before the new database can be queried.
 
 ```bash
 codeql database finalize \
@@ -151,7 +151,7 @@ Finalization is required before queries can be executed.
 
 ### Running Queries
 
-Run one or more queries against a CodeQL database, saving the results to the results subdirectory of the database directory.
+The `[codeql database run-queries`](https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-run-queries) command runs one or more queries against a CodeQL database, saving the results to the results subdirectory of the database directory.
 
 ```bash
 codeql database run-queries \
@@ -173,11 +173,13 @@ Built-in query suites include:
 
 ## Step 4: Clean up and Bundling
 
-Compact a CodeQL database on disk.
 
-Delete temporary data, and generally make a database as small as possible on disk without degrading its future usefulness
 
 ### Cleanup
+
+The [`codeql database cleanup`](https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-cleanup) command compacts a CodeQL database on disk.
+
+Delete temporary data, and generally make a database as small as possible on disk without degrading its future usefulness
 
 ```bash
 codeql database cleanup {DATABASE} --cache-cleanup=clear
@@ -185,7 +187,7 @@ codeql database cleanup {DATABASE} --cache-cleanup=clear
 
 ### Bundle Database
 
-Create a relocatable archive of a CodeQL database.
+The [`codeql database bundle`](https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-bundle) command creates a relocatable archive of a CodeQL database.
 
 A command that zips up the useful parts of the database. This will only include the mandatory components, unless the user specifically requests that results, logs, TRAP, or similar should be included.
 
@@ -204,8 +206,8 @@ GitHub Actions exposes these lower-level commands to support the wide variety of
 
 In the majority of cases, only two commands are required:
 
-- `codeql database create`
-- `codeql database analyze`
+- [`codeql database create`](https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-create). This command creates, traces build and finalises the database. 
+- [`codeql database analyze`](https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-analyze). This command runs the queries and produces SARIF results.
 
 These commands handle database initialization, build tracing, extraction, finalization, and query execution under the hood.
 
