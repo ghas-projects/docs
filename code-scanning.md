@@ -30,6 +30,17 @@ There are three primary ways to run CodeQL:
 3. **CodeQL CLI in an external CI/CD pipeline**  
    Runs CodeQL outside of GitHub Actions, with results uploaded back to GitHub for code scanning.
 
+### Tool Setup
+
+You should always download the **CodeQL bundle** from the **Releases** page of the [`codeql-action` repository](https://github.com/github/codeql-action/releases).  
+The bundle includes the CodeQL CLI along with a set of queries that are guaranteed to be compatible with that release.
+
+Downloading the CodeQL CLI and query packs separately is **not recommended**, as mismatched versions can lead to incompatibilities and unexpected analysis behavior.
+
+The source code for the CodeQL GitHub Action itself is available here:  
+https://github.com/github/codeql-action/
+
+
 ---
 ## Step 1: Creating a Database 
 
@@ -48,6 +59,8 @@ The database initialization step is performed by the following GitHub Action:
 ```yaml
 github/codeql-action/init@vX
 ```
+
+All supported input options are declared in the [`init` action.yml](https://github.com/github/codeql-action/blob/main/init/action.yml). This file is also the entry point for the action implementation.
 
 This action invokes the equivalent of the [`codeql database init`](https://docs.github.com/en/code-security/reference/code-scanning/codeql/codeql-cli-manual/database-init) CLI command.
 
@@ -110,7 +123,7 @@ codeql database init \
 
 ### Autobuild in GitHub Actions
 
-In GitHub Actions, autobuild is triggered using:
+In GitHub Actions, [autobuild](https://github.com/github/codeql-action/blob/main/autobuild/action.yml) is triggered using:
 
 ```yaml
 github/codeql-action/autobuild@v4
@@ -129,11 +142,13 @@ codeql database trace-command \
 
 ## Step 3: Performing CodeQL Analysis
 
-In GitHub Actions, analysis and database finalization are performed using:
+In GitHub Actions, analysis and database finalization are performed using :
 
 ```yaml
 github/codeql-action/analyze@v4
 ```
+
+The supported input options and implementation details for this action are defined in the [analyze action.yml](https://github.com/github/codeql-action/blob/main/analyze/action.yml).
 
 ### Database Finalization
 
@@ -168,6 +183,8 @@ Built-in query suites include:
 - **code-scanning** (default)
 - **security-extended**
 - **security-and-quality**
+
+[[Documentation Link]](https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/code-scanning/codeql/codeql-queries/about-built-in-queries)
 
 ---
 
